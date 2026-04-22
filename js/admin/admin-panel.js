@@ -510,6 +510,7 @@ function loadLiveDataScript(path, globalName) {
   return new Promise(function(resolve, reject) {
     var iframe = document.createElement('iframe');
     var timeoutId = null;
+    var bridgeName = '__adminLoadedData__';
     iframe.style.display = 'none';
     iframe.setAttribute('aria-hidden', 'true');
     document.body.appendChild(iframe);
@@ -529,7 +530,11 @@ function loadLiveDataScript(path, globalName) {
       script.src = getLiveSiteOrigin() + '/' + path + '?t=' + Date.now();
       script.onload = function() {
         try {
-          var payload = iframe.contentWindow[globalName];
+          var bridge = doc.createElement('script');
+          bridge.text = 'window.' + bridgeName + ' = typeof ' + globalName + ' !== "undefined" ? ' + globalName + ' : null;';
+          doc.body.appendChild(bridge);
+
+          var payload = iframe.contentWindow[bridgeName];
           if (!Array.isArray(payload)) throw new Error('Unexpected live data format in ' + path);
           cleanup();
           resolve(JSON.parse(JSON.stringify(payload)));
@@ -555,11 +560,12 @@ function loadLiveDataScript(path, globalName) {
   });
 }
 
-async function refreshLiveWebsiteData() {
+async function refreshLiveWebsiteData(options) {
+  options = options || {};
   if (refreshLiveWebsiteData.pending) return;
   refreshLiveWebsiteData.pending = true;
   setLiveRefreshPending(true);
-  setLiveRefreshMessage('Refreshing published data from ' + getLiveSiteOrigin().replace(/^https?:\/\//, '') + '…');
+  setLiveRefreshMessage(options.pendingMessage || ('Refreshing published data from ' + getLiveSiteOrigin().replace(/^https?:\/\//, '') + '…'));
 
   try {
     var results = await Promise.allSettled([
@@ -588,14 +594,22 @@ async function refreshLiveWebsiteData() {
     var refreshedAt = formatRefreshTime(new Date());
     if (failed.length) {
       setLiveRefreshMessage('Partially refreshed at ' + refreshedAt + '. Missing: ' + failed.join(', ') + '.', 'warn');
-      showToast('Live refresh completed with warnings: ' + failed.join(', '));
+      if (options.showToast !== false) {
+        showToast('Live refresh completed with warnings: ' + failed.join(', '));
+      }
     } else {
       setLiveRefreshMessage('Live website data refreshed at ' + refreshedAt + '.', 'success');
-      showToast('Dashboard refreshed from live website ✓', 'success');
+      if (options.showToast !== false) {
+        showToast('Dashboard refreshed from live website ✓', 'success');
+      }
     }
+    return synced.length > 0;
   } catch (e) {
     setLiveRefreshMessage(e.message, 'error');
-    showToast('Live refresh failed — ' + e.message, 'error');
+    if (options.showToast !== false) {
+      showToast('Live refresh failed — ' + e.message, 'error');
+    }
+    return false;
   } finally {
     refreshLiveWebsiteData.pending = false;
     setLiveRefreshPending(false);
@@ -610,10 +624,16 @@ async function initAdmin() {
   renderTables();
   loadGitHubSettings();
   updateMetrics();
-  // Fetch latest data from GitHub if connected
+
   var user = localStorage.getItem('ghUser'), repo = localStorage.getItem('ghRepo'),
       branch = localStorage.getItem('ghBranch') || 'main', token = getGitHubToken();
-  if (user && repo && token) {
+
+  var liveSyncSucceeded = await refreshLiveWebsiteData({
+    pendingMessage: 'Refreshing published website data for this session…',
+    showToast: false
+  });
+
+  if (!liveSyncSucceeded && user && repo && token) {
     // Show syncing indicator
     var syncIndicator = document.createElement('div');
     syncIndicator.id = 'syncIndicator';
@@ -623,6 +643,7 @@ async function initAdmin() {
     try {
       await fetchLatestDataFromGitHub(user, repo, branch, token);
       syncIndicator.innerHTML = '<span style="color:#27AE60">&#10003;</span> Synced';
+      setLiveRefreshMessage('Loaded the latest repository data because the live website could not be reached just now.', 'warn');
       setTimeout(function() { if (syncIndicator.parentNode) syncIndicator.parentNode.removeChild(syncIndicator); }, 1500);
     } catch(e) {
       if (syncIndicator.parentNode) syncIndicator.parentNode.removeChild(syncIndicator);
@@ -658,9 +679,9 @@ async function fetchLatestDataFromGitHub(user, repo, branch, token) {
 }
 
 function updateMetrics() {
-  document.getElementById('metricUK').textContent = ukListings.length;
-  document.getElementById('metricES').textContent = esListings.length;
-  document.getElementById('metricEC').textContent = ecListings.length;
+  document.getElementById('metricUK').textContent = ukListings.filter(function(listing) { return !listing.hidden; }).length;
+  document.getElementById('metricES').textContent = esListings.filter(function(listing) { return !listing.hidden; }).length;
+  document.getElementById('metricEC').textContent = ecListings.filter(function(listing) { return !listing.hidden; }).length;
   const ghUser = localStorage.getItem('ghUser');
   const ghToken = getGitHubToken();
   if (ghUser && ghToken) {
@@ -668,6 +689,11 @@ function updateMetrics() {
     document.getElementById('metricGH').style.color = 'var(--green)';
     document.getElementById('ghStatusDot').classList.add('connected');
     document.getElementById('ghStatusText').textContent = ghUser;
+  } else {
+    document.getElementById('metricGH').textContent = 'Not set up';
+    document.getElementById('metricGH').style.color = '';
+    document.getElementById('ghStatusDot').classList.remove('connected');
+    document.getElementById('ghStatusText').textContent = 'Not connected';
   }
 }
 
