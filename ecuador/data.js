@@ -17,7 +17,8 @@ const ecuadorProjects = [
     "location": "South of Manta, Manabí",
     "desc": "Estate plots with lush vegetation, paved access and 24h security. Ideal for residence or holiday investment.",
     "price": "From $12,000",
-    "emoji": "🌿"
+    "emoji": "🌿",
+    "hidden": true
   },
   {
     "id": 2,
@@ -33,7 +34,8 @@ const ecuadorProjects = [
     "location": "South of Manta, Manabí",
     "desc": "Planned development with paved streets, green areas and residential plots with high coastal value growth.",
     "price": "From $8,500",
-    "emoji": "🏙"
+    "emoji": "🏙",
+    "hidden": true
   },
   {
     "id": 3,
@@ -49,7 +51,8 @@ const ecuadorProjects = [
     "location": "South of Manta, Manabí",
     "desc": "Privileged location with Pacific Ocean views. Spacious plots with full services and title deeds ready.",
     "price": "From $15,000",
-    "emoji": "🌊"
+    "emoji": "🌊",
+    "hidden": true
   },
   {
     "id": 4,
@@ -65,7 +68,8 @@ const ecuadorProjects = [
     "location": "South of Manta, Manabí",
     "desc": "Beachfront residential project. Fully consolidated development with complete infrastructure and direct beach access.",
     "price": "From $18,000",
-    "emoji": "🏖"
+    "emoji": "🏖",
+    "hidden": true
   },
   {
     "id": 5,
@@ -85,6 +89,7 @@ const ecuadorProjects = [
     "location": "South of Manta, Manabí",
     "desc": "Beachside plots with individual title deeds, ideal for building or investing. High-growth tourism zone.",
     "price": "From $9,800",
-    "emoji": "🌴"
+    "emoji": "🌴",
+    "hidden": true
   }
 ];
