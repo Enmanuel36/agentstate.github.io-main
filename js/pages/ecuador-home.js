@@ -88,7 +88,16 @@
     grid.innerHTML = '';
 
     if (!visibleProjects.length) {
-      grid.innerHTML = '<div class="empty-state" style="grid-column:1 / -1;display:block;"><h3 style="color:#fff;">Projects coming soon</h3><p style="color:rgba(250,247,240,.65);">We are preparing the next Ecuador opportunities now.</p></div>';
+      grid.innerHTML = [
+        '<div class="empty-state" style="grid-column:1 / -1;display:block;">',
+        '  <div class="empty-icon">',
+        '    <svg viewBox="0 0 24 24" fill="none" stroke="#C8A75A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>',
+        '  </div>',
+        '  <h3>More listings coming soon</h3>',
+        '  <p>We&#8217;re adding new properties shortly. In the meantime, get in touch and we&#8217;ll find the right match for you.</p>',
+        '  <a href="../uk/contact.html?from=ecuador" class="btn btn-primary" style="margin-top:1.5rem;display:inline-flex;">Get in Touch &#8594;</a>',
+        '</div>'
+      ].join('');
     } else {
       visibleProjects.forEach(function(project) {
         grid.appendChild(createProjectCard(project));
