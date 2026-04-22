@@ -34,7 +34,7 @@ const propertyListings = [
     "agent": "James Carter",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-17",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": 4,
@@ -66,7 +66,8 @@ const propertyListings = [
     "agent": "Patricia Reynolds",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-08",
-    "emoji": "🏡"
+    "emoji": "🏡",
+    "hidden": true
   },
   {
     "id": 5,
@@ -97,7 +98,8 @@ const propertyListings = [
     "agent": "Patricia Reynolds",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-07",
-    "emoji": "🌿"
+    "emoji": "🌿",
+    "hidden": true
   },
   {
     "id": 6,
@@ -131,7 +133,8 @@ const propertyListings = [
     "agent": "Patricia Reynolds",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-06",
-    "emoji": "🏰"
+    "emoji": "🏰",
+    "hidden": true
   },
   {
     "id": 7,
@@ -160,7 +163,8 @@ const propertyListings = [
     "agent": "James Carter",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-05",
-    "emoji": "⚓"
+    "emoji": "⚓",
+    "hidden": true
   },
   {
     "id": 8,
@@ -192,6 +196,7 @@ const propertyListings = [
     "agent": "Patricia Reynolds",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-04",
-    "emoji": "🌻"
+    "emoji": "🌻",
+    "hidden": true
   }
 ];
