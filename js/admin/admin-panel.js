@@ -507,57 +507,22 @@ function formatRefreshTime(date) {
 }
 
 function loadLiveDataScript(path, globalName) {
-  return new Promise(function(resolve, reject) {
-    var iframe = document.createElement('iframe');
-    var timeoutId = null;
-    var bridgeName = '__adminLoadedData__';
-    iframe.style.display = 'none';
-    iframe.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(iframe);
-
-    function cleanup() {
-      clearTimeout(timeoutId);
-      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-    }
-
-    try {
-      var doc = iframe.contentWindow.document;
-      doc.open();
-      doc.write('<!DOCTYPE html><html><head></head><body></body></html>');
-      doc.close();
-
-      var script = doc.createElement('script');
-      script.src = getLiveSiteOrigin() + '/' + path + '?t=' + Date.now();
-      script.onload = function() {
-        try {
-          var bridge = doc.createElement('script');
-          bridge.text = 'window.' + bridgeName + ' = typeof ' + globalName + ' !== "undefined" ? ' + globalName + ' : null;';
-          doc.body.appendChild(bridge);
-
-          var payload = iframe.contentWindow[bridgeName];
-          if (!Array.isArray(payload)) throw new Error('Unexpected live data format in ' + path);
-          cleanup();
-          resolve(JSON.parse(JSON.stringify(payload)));
-        } catch (e) {
-          cleanup();
-          reject(e);
-        }
-      };
-      script.onerror = function() {
-        cleanup();
-        reject(new Error('Unable to load ' + path + ' from the live website'));
-      };
-      doc.body.appendChild(script);
-
-      timeoutId = setTimeout(function() {
-        cleanup();
-        reject(new Error('Timed out while loading ' + path + ' from the live website'));
-      }, 15000);
-    } catch (e) {
-      cleanup();
-      reject(e);
-    }
-  });
+  var url = getLiveSiteOrigin().replace(/\/$/, '') + '/' + path + '?t=' + Date.now();
+  return fetch(url, { cache: 'no-store' })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Unable to load ' + path + ' from the live website');
+      }
+      return response.text();
+    })
+    .then(function(code) {
+      var escapedName = globalName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var match = code.match(new RegExp('(?:const|let|var)\\s+' + escapedName + '\\s*=\\s*(\\[[\\s\\S]*?\\]);'));
+      if (!match) {
+        throw new Error('Unexpected live data format in ' + path);
+      }
+      return JSON.parse(match[1]);
+    });
 }
 
 async function refreshLiveWebsiteData(options) {
@@ -1676,13 +1641,17 @@ function showSaveBanner(options) {
   text.textContent = options.text || 'Your changes were published successfully.';
   meta.textContent = metaParts.join(' • ');
   banner.hidden = false;
+  banner.style.display = 'flex';
   banner.focus();
   banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function hideSaveBanner() {
   var banner = document.getElementById('saveBanner');
-  if (banner) banner.hidden = true;
+  if (banner) {
+    banner.hidden = true;
+    banner.style.display = 'none';
+  }
 }
 
 document.getElementById('saveBannerClose').addEventListener('click', hideSaveBanner);
