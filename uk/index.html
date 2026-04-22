@@ -140,10 +140,20 @@
     </div>
   </div>
 
+  <!-- Cookie consent -->
+  <div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1F2933;color:rgba(255,255,255,.85);padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;z-index:9999;border-top:2px solid #C8A75A;font-size:.82rem;">
+    <p style="margin:0;line-height:1.6;max-width:680px;">We use Google Fonts and similar services that may set cookies. By continuing to use this site you agree to our <a href="privacy.html" style="color:#C8A75A;">Privacy Policy</a>.</p>
+    <div style="display:flex;gap:10px;flex-shrink:0;">
+      <button type="button" data-cookie-action="accept" style="background:#C8A75A;color:#1F2933;border:none;padding:8px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.82rem;">Accept</button>
+      <button type="button" data-cookie-action="decline" style="background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2);padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.82rem;">Decline</button>
+    </div>
+  </div>
+
   <script defer src="data.js"></script>
   <script defer src="../js/pages/main.js"></script>
   <script defer src="../js/shared/back-to-top.js"></script>
   <script defer src="../js/shared/interaction-guard.js"></script>
   <script defer src="../js/shared/site-nav.js"></script>
+  <script defer src="../js/shared/cookie-banner.js"></script>
 </body>
 </html>
