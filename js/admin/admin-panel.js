@@ -325,6 +325,8 @@ async function attemptUnlock() {
     sessionStorage.setItem(SESSION_KEY, Date.now().toString());
     document.getElementById('lockScreen').style.display = 'none';
     document.getElementById('adminApp').style.display = 'flex';
+    document.getElementById('pwInput').disabled = false;
+    startIdleTimer();
     await initAdmin();
   } else {
     var attempts = parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0') + 1;
@@ -345,15 +347,112 @@ async function attemptUnlock() {
   btn.disabled = false; btn.textContent = 'Unlock →';
 }
 
-document.getElementById('lockAgainBtn').addEventListener('click', function() {
+function lockAndExit() {
+  stopIdleTimer();
+  hideIdleWarning();
   sessionStorage.removeItem(SESSION_KEY);
   document.getElementById('adminApp').style.display = 'none';
   document.getElementById('lockScreen').style.display = 'flex';
-  document.getElementById('pwInput').value = '';
+  var pwInput = document.getElementById('pwInput');
+  pwInput.value = '';
+  pwInput.disabled = false;
   document.getElementById('lockErr').textContent = '';
   document.getElementById('lockAttempts').textContent = '';
   updateAttemptsDisplay();
+}
+document.getElementById('lockAgainBtn').addEventListener('click', lockAndExit);
+
+/* == AUTO-LOGOUT ON INACTIVITY ===================================== */
+// Admin is signed out automatically after IDLE_TIMEOUT_MS of no activity.
+// A warning modal appears IDLE_WARNING_MS before the timeout with a
+// "Stay signed in" button that resets the timer.
+var IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+var IDLE_WARNING_MS = 30 * 1000;      // 30-second warning
+var _idleLogoutTimer = null;
+var _idleWarningTimer = null;
+var _idleCountdownTimer = null;
+var _idleLastActivity = 0;
+
+function startIdleTimer() {
+  stopIdleTimer();
+  _idleWarningTimer = setTimeout(showIdleWarning, IDLE_TIMEOUT_MS - IDLE_WARNING_MS);
+  _idleLogoutTimer = setTimeout(function() {
+    lockAndExit();
+    if (typeof showToast === 'function') showToast('Signed out due to inactivity', 'error');
+  }, IDLE_TIMEOUT_MS);
+}
+
+function stopIdleTimer() {
+  if (_idleLogoutTimer)    { clearTimeout(_idleLogoutTimer);    _idleLogoutTimer = null; }
+  if (_idleWarningTimer)   { clearTimeout(_idleWarningTimer);   _idleWarningTimer = null; }
+  if (_idleCountdownTimer) { clearInterval(_idleCountdownTimer); _idleCountdownTimer = null; }
+}
+
+function showIdleWarning() {
+  var modal = document.getElementById('idleWarning');
+  var counter = document.getElementById('idleCountdown');
+  if (!modal || !counter) return;
+  modal.style.display = 'flex';
+  var remaining = Math.floor(IDLE_WARNING_MS / 1000);
+  counter.textContent = remaining;
+  if (_idleCountdownTimer) clearInterval(_idleCountdownTimer);
+  _idleCountdownTimer = setInterval(function() {
+    remaining--;
+    counter.textContent = Math.max(0, remaining);
+    if (remaining <= 0 && _idleCountdownTimer) {
+      clearInterval(_idleCountdownTimer);
+      _idleCountdownTimer = null;
+    }
+  }, 1000);
+}
+
+function hideIdleWarning() {
+  var modal = document.getElementById('idleWarning');
+  if (modal) modal.style.display = 'none';
+  if (_idleCountdownTimer) { clearInterval(_idleCountdownTimer); _idleCountdownTimer = null; }
+}
+
+function resetIdleTimer() {
+  // Only active while the admin app is visible (user is signed in).
+  var adminApp = document.getElementById('adminApp');
+  if (!adminApp || adminApp.style.display === 'none') return;
+  // While the warning modal is showing, require an explicit button click.
+  var modal = document.getElementById('idleWarning');
+  if (modal && modal.style.display === 'flex') return;
+  startIdleTimer();
+}
+
+function handleIdleActivity() {
+  var now = Date.now();
+  if (now - _idleLastActivity < 1000) return; // throttle
+  _idleLastActivity = now;
+  resetIdleTimer();
+}
+
+['mousedown','mousemove','keydown','touchstart','scroll','wheel'].forEach(function(evt) {
+  document.addEventListener(evt, handleIdleActivity, { passive: true });
 });
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') resetIdleTimer();
+});
+
+// Wire up warning-modal buttons once DOM is ready.
+(function wireIdleButtons() {
+  function bind() {
+    var stayBtn = document.getElementById('idleStayBtn');
+    var logoutBtn = document.getElementById('idleLogoutBtn');
+    if (stayBtn) stayBtn.addEventListener('click', function() {
+      hideIdleWarning();
+      startIdleTimer();
+    });
+    if (logoutBtn) logoutBtn.addEventListener('click', lockAndExit);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind);
+  } else {
+    bind();
+  }
+})();
 
 /* == NAVIGATION =================================================== */
 const sections = ['dashboard','uk','spain','ecuador','add-ecuador','add','github'];
@@ -1841,6 +1940,7 @@ function checkSessionAndInit() {
   if (unlocked && (Date.now() - parseInt(unlocked)) < fourHours) {
     document.getElementById('lockScreen').style.display = 'none';
     document.getElementById('adminApp').style.display = 'flex';
+    startIdleTimer();
     initAdmin();
   } else {
     sessionStorage.removeItem(SESSION_KEY);

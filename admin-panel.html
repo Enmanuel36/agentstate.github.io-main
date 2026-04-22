@@ -155,6 +155,14 @@
     .save-banner-close{background:#fff;color:#14532d;border:1px solid rgba(20,83,45,.16);border-radius:999px;padding:8px 14px;font-size:.78rem;font-weight:600;cursor:pointer;flex-shrink:0}
     .save-banner-close:hover{border-color:rgba(20,83,45,.3)}
 
+    /* ── Idle warning modal ── */
+    .idle-modal-wrap{display:none;position:fixed;inset:0;background:rgba(31,41,51,.55);z-index:10000;align-items:center;justify-content:center;padding:20px}
+    .idle-modal{background:#fff;border-radius:14px;padding:28px 30px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+    .idle-modal h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);margin-bottom:10px}
+    .idle-modal p{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:6px}
+    .idle-countdown{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold);font-weight:600;margin:10px 0 18px;display:block}
+    .idle-modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
     /* ── Notifications ── */
     .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:8px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .3s}
     .toast.show{transform:translateY(0);opacity:1}
@@ -644,6 +652,19 @@
     </div><!-- page-content -->
   </div><!-- main-area -->
 </div><!-- adminApp -->
+
+<!-- Idle warning modal -->
+<div class="idle-modal-wrap" id="idleWarning" role="dialog" aria-labelledby="idleTitle" aria-modal="true">
+  <div class="idle-modal">
+    <h3 id="idleTitle">Are you still there?</h3>
+    <p>You'll be signed out for security due to inactivity.</p>
+    <span class="idle-countdown"><span id="idleCountdown">30</span>s</span>
+    <div class="idle-modal-actions">
+      <button class="btn btn-gold" id="idleStayBtn" type="button">Stay signed in</button>
+      <button class="btn btn-outline" id="idleLogoutBtn" type="button">Sign out now</button>
+    </div>
+  </div>
+</div>
 
 <!-- Toast notification -->
 <div class="toast" id="toast"></div>
