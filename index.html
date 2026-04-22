@@ -29,7 +29,7 @@
     body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 90% at 90% 50%,rgba(200,167,90,.12) 0%,transparent 65%),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(200,167,90,.07) 0%,transparent 60%);pointer-events:none;z-index:0}
     body::after{content:'';position:fixed;right:0;top:0;bottom:0;width:42%;background:linear-gradient(135deg,transparent 50%,rgba(200,167,90,.05) 50%);pointer-events:none;z-index:0}
     .site-header{display:flex;justify-content:center;align-items:center;padding:2rem 2rem 0;position:relative;z-index:2;animation:fadeInUp .6s ease both}
-    .site-logo{height:110px;width:auto;object-fit:contain}
+    .site-logo{height:200px;width:auto;object-fit:contain}
     .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem 2rem;position:relative;z-index:2}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--c-gold);margin-bottom:18px;animation:fadeInUp .6s .15s ease both}
     .hero-eyebrow::before,.hero-eyebrow::after{content:'';width:24px;height:1px;background:var(--c-gold);opacity:.6}
@@ -51,7 +51,7 @@
     .site-footer{text-align:center;padding:1.5rem;font-size:11px;letter-spacing:.1em;color:rgba(250,247,240,.2);text-transform:uppercase;position:relative;z-index:2;animation:fadeInUp .6s .6s ease both}
     .site-footer span{color:rgba(200,167,90,.4)}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    @media(max-width:640px){.cards{grid-template-columns:1fr;max-width:360px}.hero h1{font-size:1.8rem}.site-logo{height:80px}}
+    @media(max-width:640px){.cards{grid-template-columns:1fr;max-width:360px}.hero h1{font-size:1.8rem}.site-logo{height:110px}}
       @media (max-width: 600px) {
       .country-grid { grid-template-columns: 1fr; }
       .landing-hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
