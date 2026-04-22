@@ -101,7 +101,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-08",
-    "emoji": "🌊"
+    "emoji": "🌊",
+    "hidden": true
   },
   {
     "id": 4,
@@ -134,7 +135,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-07",
-    "emoji": "🫒"
+    "emoji": "🫒",
+    "hidden": true
   },
   {
     "id": 5,
@@ -166,7 +168,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-06",
-    "emoji": "🏙"
+    "emoji": "🏙",
+    "hidden": true
   },
   {
     "id": 6,
