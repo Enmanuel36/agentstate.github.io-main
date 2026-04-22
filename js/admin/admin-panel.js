@@ -1723,6 +1723,9 @@ function showToast(msg, type='') {
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+var SAVE_BANNER_AUTO_DISMISS_MS = 5000; // auto-hide after 5 seconds
+var _saveBannerTimer = null;
+
 function showSaveBanner(options) {
   options = options || {};
   var banner = document.getElementById('saveBanner');
@@ -1743,6 +1746,10 @@ function showSaveBanner(options) {
   banner.style.display = 'flex';
   banner.focus();
   banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Auto-dismiss after the configured delay. Any subsequent save resets the timer.
+  if (_saveBannerTimer) clearTimeout(_saveBannerTimer);
+  _saveBannerTimer = setTimeout(hideSaveBanner, SAVE_BANNER_AUTO_DISMISS_MS);
 }
 
 function hideSaveBanner() {
@@ -1751,6 +1758,7 @@ function hideSaveBanner() {
     banner.hidden = true;
     banner.style.display = 'none';
   }
+  if (_saveBannerTimer) { clearTimeout(_saveBannerTimer); _saveBannerTimer = null; }
 }
 
 document.getElementById('saveBannerClose').addEventListener('click', hideSaveBanner);
