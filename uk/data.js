@@ -34,7 +34,7 @@ const propertyListings = [
     "agent": "James Carter",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-17",
-    "hidden": true
+    "hidden": false
   },
   {
     "id": 4,
