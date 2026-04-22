@@ -35,7 +35,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-10",
-    "emoji": "🏖"
+    "emoji": "🏖",
+    "hidden": true
   },
   {
     "id": 2,
@@ -68,7 +69,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-09",
-    "emoji": "🏢"
+    "emoji": "🏢",
+    "hidden": true
   },
   {
     "id": 3,
@@ -202,7 +204,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-05",
-    "emoji": "⛵"
+    "emoji": "⛵",
+    "hidden": true
   },
   {
     "id": 7,
@@ -234,7 +237,8 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-04-04",
-    "emoji": "⛳"
+    "emoji": "⛳",
+    "hidden": true
   },
   {
     "id": 8,
@@ -265,6 +269,7 @@ const propertyListings = [
     "agent": "Patricia Morales",
     "email": "hello@patriciarealestate.com",
     "added": "2026-03-20",
-    "emoji": "🌹"
+    "emoji": "🌹",
+    "hidden": true
   }
 ];
