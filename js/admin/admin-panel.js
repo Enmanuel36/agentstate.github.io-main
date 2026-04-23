@@ -1723,7 +1723,7 @@ function showToast(msg, type='') {
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-var SAVE_BANNER_AUTO_DISMISS_MS = 5000; // auto-hide after 5 seconds
+var SAVE_BANNER_AUTO_DISMISS_MS = 10000; // auto-hide after 10 seconds
 var _saveBannerTimer = null;
 
 function showSaveBanner(options) {
