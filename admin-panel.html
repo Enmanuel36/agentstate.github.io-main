@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self'; connect-src 'self' https://api.github.com https://patriciaestateagent.com; frame-src 'self'; form-action 'self' mailto:;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self'; connect-src 'self' https://api.github.com https://patriciaestateagent.com https://api.anthropic.com; frame-src 'self'; form-action 'self' mailto:;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <!--
     ============================================================
@@ -156,6 +156,46 @@
     .save-banner-close{background:#fff;color:#14532d;border:1px solid rgba(20,83,45,.16);border-radius:999px;padding:8px 14px;font-size:.78rem;font-weight:600;cursor:pointer;flex-shrink:0}
     .save-banner-close:hover{border-color:rgba(20,83,45,.3)}
 
+    /* ── Live preview (mirrors the live .listing-card) ── */
+    .preview-wrap{margin-top:24px}
+    .preview-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .preview-header h3{font-size:.82rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+    .preview-header small{font-size:.75rem;color:var(--text2)}
+    .preview-stage{background:var(--ivory);border:1px dashed var(--border);border-radius:12px;padding:28px;display:flex;justify-content:center}
+    .preview-card{max-width:360px;width:100%;background:#fff;border:1px solid #E5E7EB;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;font-family:'Inter',sans-serif;box-shadow:0 4px 16px rgba(31,41,51,.06)}
+    .preview-card .pc-image{position:relative;height:190px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:3rem}
+    .preview-card .pc-image.to-let{background:linear-gradient(135deg,#2C4A3E 0%,#3D6B5A 100%)}
+    .preview-card .pc-image.let-agreed{background:linear-gradient(135deg,#3D3D2C 0%,#5A5A3D 100%)}
+    .preview-card .pc-image img{width:100%;height:100%;object-fit:cover;display:block}
+    .preview-card .pc-placeholder{color:rgba(255,255,255,.6);font-size:.82rem;font-family:'Inter',sans-serif;text-align:center;padding:20px}
+    .preview-card .pc-badge{position:absolute;top:14px;left:14px;padding:4px 12px;border-radius:99px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff}
+    .preview-card .pc-badge.to-let{background:#2C7A5A}
+    .preview-card .pc-badge.let-agreed{background:#6B6020}
+    .preview-card .pc-photocount{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:3px 8px;border-radius:20px}
+    .preview-card .pc-fav{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#5A6A7A}
+    .preview-card .pc-body{padding:20px 22px 16px;flex:1;display:flex;flex-direction:column}
+    .preview-card .pc-price{font-family:'Playfair Display',Georgia,serif;font-size:1.35rem;font-weight:700;color:#C8A75A;margin-bottom:4px;line-height:1.2}
+    .preview-card .pc-title{font-family:'Playfair Display',Georgia,serif;font-size:1.05rem;color:#2F3A4A;line-height:1.35;margin-bottom:6px;font-weight:600}
+    .preview-card .pc-address{font-size:.82rem;color:#5A6A7A;margin-bottom:14px;display:flex;align-items:center;gap:5px}
+    .preview-card .pc-specs{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+    .preview-card .pc-spec{display:flex;align-items:center;gap:5px;font-size:.8rem;color:#5A6A7A}
+    .preview-card .pc-desc{font-size:.83rem;color:#5A6A7A;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:14px;flex:1;min-height:2.6em}
+    .preview-card .pc-footer{padding:14px 22px;border-top:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FAF7F0}
+    .preview-card .pc-agent{font-size:.75rem;color:#8A9AAA}
+    .preview-card .pc-agent strong{display:block;font-size:.8rem;color:#5A6A7A;font-weight:600}
+    .preview-card .pc-enquire{background:#C8A75A;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:default}
+    .preview-card .pc-placeholder-text{color:#8A9AAA;font-style:italic}
+
+    /* ── AI generate button ── */
+    .ai-generate-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+    .ai-generate-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:linear-gradient(135deg,#C8A75A 0%,#D6B870 100%);color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;font-family:'Inter',sans-serif}
+    .ai-generate-btn:hover{opacity:.9}
+    .ai-generate-btn:active{transform:scale(.98)}
+    .ai-generate-btn:disabled{opacity:.5;cursor:not-allowed}
+    .ai-generate-btn svg{width:14px;height:14px}
+    .ai-generate-hint{font-size:.75rem;color:var(--text2)}
+    .ai-generate-hint a{color:var(--gold);cursor:pointer;text-decoration:underline}
+
     /* ── Idle warning modal ── */
     .idle-modal-wrap{display:none;position:fixed;inset:0;background:rgba(31,41,51,.55);z-index:10000;align-items:center;justify-content:center;padding:20px}
     .idle-modal{background:#fff;border-radius:14px;padding:28px 30px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25)}
@@ -255,6 +295,10 @@
     <button class="nav-link" data-section="github">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
       GitHub Setup
+    </button>
+    <button class="nav-link" data-section="ai">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 14 9l6 1-4.5 4 1 6L12 17l-4.5 3 1-6L4 10l6-1z"/></svg>
+      AI Description
     </button>
 
     <div class="sidebar-bottom">
@@ -468,6 +512,13 @@
             </div>
             <div class="form-group full">
               <label class="form-label">Description</label>
+              <div class="ai-generate-row">
+                <button class="ai-generate-btn" id="aiGenerateBtn" type="button" style="display:none">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 14 8l6 1-4.5 4 1 6L12 16l-4.5 3 1-6L4 9l6-1z"/></svg>
+                  Generate with AI
+                </button>
+                <span class="ai-generate-hint" id="aiGenerateHint">Want AI to draft this? <a data-section="ai" class="nav-link" style="padding:0;background:none;color:var(--gold);display:inline;width:auto">Set up your Anthropic key →</a></span>
+              </div>
               <textarea class="form-input" id="propDesc" rows="4" placeholder="Describe the property — layout, condition, surroundings and standout features…"></textarea>
             </div>
             <div class="form-group">
@@ -486,6 +537,38 @@
             </button>
             <button class="btn btn-outline" id="clearPropertyBtn" type="button">Clear form</button>
             <span id="saveMsg" style="font-size:.8rem;color:var(--text2)"></span>
+          </div>
+        </div>
+
+        <!-- Live preview — mirrors the live .listing-card exactly. Nothing is published. -->
+        <div class="card preview-wrap">
+          <div class="preview-header">
+            <h3>Live preview</h3>
+            <small>Updates as you type — this is how visitors will see your listing.</small>
+          </div>
+          <div class="preview-stage">
+            <article class="preview-card" id="previewCard">
+              <div class="pc-image to-let" id="pcImage">
+                <span class="pc-placeholder">Upload a photo to see it here</span>
+                <span class="pc-badge to-let" id="pcBadge">To Let</span>
+                <span class="pc-photocount" id="pcPhotoCount" style="display:none">📷 0 photos</span>
+                <button class="pc-fav" type="button" aria-label="Save property">♡</button>
+              </div>
+              <div class="pc-body">
+                <div class="pc-price" id="pcPrice"><span class="pc-placeholder-text">Price</span></div>
+                <h3 class="pc-title" id="pcTitle"><span class="pc-placeholder-text">Property title</span></h3>
+                <p class="pc-address" id="pcAddress">📍 <span class="pc-placeholder-text">Address, Town Postcode</span></p>
+                <div class="pc-specs" id="pcSpecs">
+                  <span class="pc-spec">🛏 3 beds</span>
+                  <span class="pc-spec">🚿 1 bath</span>
+                </div>
+                <p class="pc-desc" id="pcDesc"><span class="pc-placeholder-text">Your description will appear here…</span></p>
+              </div>
+              <div class="pc-footer">
+                <div class="pc-agent"><span>Listed by</span><strong id="pcAgent">Patricia AM</strong></div>
+                <button class="pc-enquire" type="button">Enquire</button>
+              </div>
+            </article>
           </div>
         </div>
       </div>
@@ -646,6 +729,68 @@
             <button class="btn btn-gold" id="connectBtn" type="button">Connect & Test</button>
             <button class="btn btn-danger btn-sm" id="disconnectBtn" type="button" style="display:none">Disconnect</button>
             <span id="ghMsg" style="font-size:.8rem;color:var(--text2)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI DESCRIPTION SETTINGS -->
+      <div id="section-ai" class="section-hidden">
+        <div id="aiConnectedBanner" class="connected-banner section-hidden">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          AI description ready — the "Generate" button on the Add Property form is live
+        </div>
+        <div class="github-setup-card">
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Get an Anthropic API key</h4>
+              <p>Create a free account at <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>, add a small amount of credit ($5 is plenty for hundreds of listings), then go to <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">API keys</a> and click "Create key".</p>
+            </div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Paste your key below</h4>
+              <p>The key is saved only in your browser's local storage. It's never transmitted anywhere except directly to Anthropic's API over HTTPS when you click "Generate".</p>
+            </div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Optional: set a house style</h4>
+              <p>Add any writing guidelines that should apply to every generated description — tone, phrasing, things to always/never include. Claude will follow it on every generation.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Anthropic API key <span class="req">*</span></label>
+              <div class="token-field">
+                <input class="form-input" id="aiKey" type="password" placeholder="sk-ant-..." style="padding-right:38px" autocomplete="off" autocapitalize="none" spellcheck="false" />
+                <button class="token-toggle" id="toggleAiKeyBtn" type="button" style="color:var(--gold);display:flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">House style (optional)</label>
+              <textarea class="form-input" id="aiStyle" rows="4" placeholder="e.g. Warm but professional tone. Always mention transport links when relevant. Use British English spellings. Never use the word 'nestled'. Keep descriptions to 3–4 sentences."></textarea>
+              <small style="font-size:.72rem;color:var(--text2);margin-top:4px">Claude will follow these guidelines for every description.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Include photos in the prompt</label>
+              <select class="form-input" id="aiIncludePhotos">
+                <option value="yes" selected>Yes — richer descriptions (recommended)</option>
+                <option value="no">No — text fields only (cheaper)</option>
+              </select>
+              <small style="font-size:.72rem;color:var(--text2);margin-top:4px">Sending photos lets Claude describe what it actually sees.</small>
+            </div>
+          </div>
+          <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-gold" id="saveAiBtn" type="button">Save settings</button>
+            <button class="btn btn-outline" id="testAiBtn" type="button">Test connection</button>
+            <button class="btn btn-danger btn-sm" id="clearAiBtn" type="button" style="display:none">Remove key</button>
+            <span id="aiMsg" style="font-size:.8rem;color:var(--text2)"></span>
           </div>
         </div>
       </div>

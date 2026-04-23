@@ -455,7 +455,7 @@ document.addEventListener('visibilitychange', function() {
 })();
 
 /* == NAVIGATION =================================================== */
-const sections = ['dashboard','uk','spain','ecuador','add-ecuador','add','github'];
+const sections = ['dashboard','uk','spain','ecuador','add-ecuador','add','github','ai'];
 
 document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
   btn.addEventListener('click', () => showSection(btn.dataset.section));
@@ -562,6 +562,11 @@ function bindAdminEventHandlers() {
   bindButton('toggleTokenBtn', toggleToken);
   bindButton('connectBtn', connectGitHub);
   bindButton('disconnectBtn', disconnectGitHub);
+  bindButton('toggleAiKeyBtn', toggleAiKey);
+  bindButton('saveAiBtn', saveAiSettings);
+  bindButton('testAiBtn', testAiConnection);
+  bindButton('clearAiBtn', clearAiSettings);
+  bindButton('aiGenerateBtn', generateDescription);
 
   bindListingActionDelegates();
   document.addEventListener('error', handleAdminImageError, true);
@@ -687,7 +692,9 @@ async function initAdmin() {
   try { ecListings = JSON.parse(JSON.stringify(_ecData)); } catch(e) { ecListings = []; }
   renderTables();
   loadGitHubSettings();
+  loadAiSettings();
   updateMetrics();
+  updatePreviewCard();
 
   var user = localStorage.getItem('ghUser'), repo = localStorage.getItem('ghRepo'),
       branch = localStorage.getItem('ghBranch') || 'main', token = getGitHubToken();
@@ -1035,6 +1042,394 @@ function disconnectGitHub() {
 function toggleToken() {
   const t = document.getElementById('ghToken');
   t.type = t.type === 'password' ? 'text' : 'password';
+}
+
+/* == LIVE PREVIEW (Add Property form) =============================== */
+// Reads the Add Property form values and renders them into the preview card.
+// The preview markup mirrors the live .listing-card created by createCard() in
+// js/pages/main.js, so what the user sees here is what visitors will see once
+// they click "Save to GitHub".
+function updatePreviewCard() {
+  var card = document.getElementById('previewCard');
+  if (!card) return;
+
+  var title    = (document.getElementById('propTitle')    || {}).value || '';
+  var price    = (document.getElementById('propPrice')    || {}).value || '';
+  var address  = (document.getElementById('propAddress')  || {}).value || '';
+  var town     = (document.getElementById('propTown')     || {}).value || '';
+  var postcode = (document.getElementById('propPostcode') || {}).value || '';
+  var beds     = (document.getElementById('propBeds')     || {}).value;
+  var baths    = (document.getElementById('propBaths')    || {}).value;
+  var sqft     = (document.getElementById('propSqft')     || {}).value || '';
+  var desc     = (document.getElementById('propDesc')     || {}).value || '';
+  var typeSel  = (document.getElementById('propType')     || {}).value || 'to-let';
+  var agent    = (document.getElementById('propAgent')    || {}).value || 'Patricia AM';
+  var photoField = document.getElementById('propPhotos');
+  var photos = photoField ? photoField.value.split('\n').map(function(s){return s.trim();}).filter(Boolean) : [];
+
+  // Image area
+  var img = document.getElementById('pcImage');
+  img.className = 'pc-image ' + typeSel;
+  img.innerHTML = '';
+  if (photos.length) {
+    var imgEl = document.createElement('img');
+    imgEl.src = photos[0];
+    imgEl.alt = title || 'Property photo';
+    img.appendChild(imgEl);
+  } else {
+    var ph = document.createElement('span');
+    ph.className = 'pc-placeholder';
+    ph.textContent = 'Upload a photo to see it here';
+    img.appendChild(ph);
+  }
+  // Badge
+  var badge = document.createElement('span');
+  badge.className = 'pc-badge ' + typeSel;
+  badge.id = 'pcBadge';
+  badge.textContent = typeSel === 'let-agreed' ? 'Let Agreed' : 'To Let';
+  img.appendChild(badge);
+  // Photo count
+  if (photos.length > 1) {
+    var pc = document.createElement('span');
+    pc.className = 'pc-photocount';
+    pc.textContent = '📷 ' + photos.length + ' photos';
+    img.appendChild(pc);
+  }
+  // Favorite button
+  var fav = document.createElement('button');
+  fav.className = 'pc-fav';
+  fav.type = 'button';
+  fav.setAttribute('aria-label','Save property');
+  fav.textContent = '♡';
+  img.appendChild(fav);
+
+  // Price
+  var priceEl = document.getElementById('pcPrice');
+  priceEl.innerHTML = '';
+  if (price) priceEl.textContent = price;
+  else { var span = document.createElement('span'); span.className='pc-placeholder-text'; span.textContent='Price'; priceEl.appendChild(span); }
+
+  // Title
+  var titleEl = document.getElementById('pcTitle');
+  titleEl.innerHTML = '';
+  if (title) titleEl.textContent = title;
+  else { var sp = document.createElement('span'); sp.className='pc-placeholder-text'; sp.textContent='Property title'; titleEl.appendChild(sp); }
+
+  // Address
+  var addrEl = document.getElementById('pcAddress');
+  addrEl.innerHTML = '📍 ';
+  var fullAddr = [address, town, postcode].filter(Boolean).join(', ').replace(/, ([^,]*)$/, ' $1');
+  if (address || town || postcode) {
+    addrEl.appendChild(document.createTextNode([address, [town, postcode].filter(Boolean).join(' ')].filter(Boolean).join(', ')));
+  } else {
+    var p = document.createElement('span'); p.className='pc-placeholder-text'; p.textContent='Address, Town Postcode'; addrEl.appendChild(p);
+  }
+
+  // Specs
+  var specs = document.getElementById('pcSpecs');
+  specs.innerHTML = '';
+  if (beds !== undefined && beds !== '') {
+    var bnum = parseInt(beds, 10);
+    var bedsLabel = bnum === 0 ? 'Studio' : bnum + ' bed' + (bnum !== 1 ? 's' : '');
+    var b = document.createElement('span'); b.className='pc-spec'; b.textContent = '🛏 ' + bedsLabel; specs.appendChild(b);
+  }
+  if (baths) {
+    var bnum2 = parseInt(baths, 10);
+    var ba = document.createElement('span'); ba.className='pc-spec'; ba.textContent = '🚿 ' + bnum2 + ' bath' + (bnum2 !== 1 ? 's' : ''); specs.appendChild(ba);
+  }
+  if (sqft) {
+    var s = document.createElement('span'); s.className='pc-spec'; s.textContent = '📐 ' + sqft; specs.appendChild(s);
+  }
+
+  // Description
+  var descEl = document.getElementById('pcDesc');
+  descEl.innerHTML = '';
+  if (desc) descEl.textContent = desc;
+  else { var dp = document.createElement('span'); dp.className='pc-placeholder-text'; dp.textContent='Your description will appear here…'; descEl.appendChild(dp); }
+
+  // Agent
+  var agentEl = document.getElementById('pcAgent');
+  if (agentEl) agentEl.textContent = agent || 'Patricia AM';
+}
+
+// Wire live-update listeners once, after the admin app is in the DOM.
+(function wirePreviewListeners() {
+  function bind() {
+    var ids = ['propTitle','propPrice','propAddress','propTown','propPostcode',
+               'propBeds','propBaths','propSqft','propDesc','propType','propAgent','propPhotos'];
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var ev = (el.tagName === 'SELECT') ? 'change' : 'input';
+      el.addEventListener(ev, updatePreviewCard);
+    });
+    // Photos are appended to #propPhotos programmatically, so observe changes too.
+    var photosEl = document.getElementById('propPhotos');
+    if (photosEl && 'MutationObserver' in window) {
+      // Fallback: poll for changes the photo uploader makes directly to .value
+      var last = photosEl.value;
+      setInterval(function() {
+        if (photosEl.value !== last) { last = photosEl.value; updatePreviewCard(); }
+      }, 500);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
+})();
+
+/* == AI DESCRIPTION SETTINGS ======================================== */
+const AI_KEY_STORAGE       = 'aiAnthropicKey';
+const AI_STYLE_STORAGE     = 'aiHouseStyle';
+const AI_PHOTOS_STORAGE    = 'aiIncludePhotos';
+const AI_MODEL             = 'claude-sonnet-4-5-20250929';
+const AI_VISION_MODEL      = 'claude-sonnet-4-5-20250929';
+
+function getAiKey() {
+  return sessionStorage.getItem(AI_KEY_STORAGE) || localStorage.getItem(AI_KEY_STORAGE) || '';
+}
+
+function toggleAiKey() {
+  var t = document.getElementById('aiKey');
+  if (!t) return;
+  t.type = t.type === 'password' ? 'text' : 'password';
+}
+
+function loadAiSettings() {
+  var keyInput   = document.getElementById('aiKey');
+  var styleInput = document.getElementById('aiStyle');
+  var photosSel  = document.getElementById('aiIncludePhotos');
+  var clearBtn   = document.getElementById('clearAiBtn');
+  var banner     = document.getElementById('aiConnectedBanner');
+  if (!keyInput) return;
+
+  var key   = getAiKey();
+  var style = localStorage.getItem(AI_STYLE_STORAGE) || '';
+  var photos = localStorage.getItem(AI_PHOTOS_STORAGE) || 'yes';
+
+  if (key)   keyInput.value   = key;
+  if (style) styleInput.value = style;
+  if (photosSel) photosSel.value = photos;
+
+  if (clearBtn) clearBtn.style.display = key ? 'inline-flex' : 'none';
+  if (banner) banner.classList.toggle('section-hidden', !key);
+
+  // Show/hide the Generate button on the Add Property form based on key presence.
+  var genBtn = document.getElementById('aiGenerateBtn');
+  if (genBtn) genBtn.style.display = key ? 'inline-flex' : 'none';
+  var genHint = document.getElementById('aiGenerateHint');
+  if (genHint) genHint.style.display = key ? 'none' : 'inline';
+}
+
+function saveAiSettings() {
+  var keyInput   = document.getElementById('aiKey');
+  var styleInput = document.getElementById('aiStyle');
+  var photosSel  = document.getElementById('aiIncludePhotos');
+  var msg        = document.getElementById('aiMsg');
+  var key   = keyInput.value.trim();
+  var style = styleInput.value.trim();
+  var photos = photosSel ? photosSel.value : 'yes';
+
+  if (!key) { msg.textContent = 'Please paste an API key.'; msg.style.color = 'var(--red)'; return; }
+  if (!/^sk-ant-/.test(key)) {
+    msg.textContent = 'That doesn\'t look like an Anthropic key (should start with "sk-ant-").';
+    msg.style.color = 'var(--red)';
+    return;
+  }
+  // Keys stay in sessionStorage for higher security (cleared when tab closes); also
+  // mirrored to localStorage for convenience across sessions. Remove-key clears both.
+  localStorage.setItem(AI_KEY_STORAGE, key);
+  sessionStorage.setItem(AI_KEY_STORAGE, key);
+  localStorage.setItem(AI_STYLE_STORAGE, style);
+  localStorage.setItem(AI_PHOTOS_STORAGE, photos);
+  msg.textContent = 'Saved ✓';
+  msg.style.color = 'var(--green)';
+  showToast('AI settings saved', 'success');
+  loadAiSettings();
+}
+
+function clearAiSettings() {
+  if (!confirm('Remove the Anthropic API key? You can paste it back in later.')) return;
+  localStorage.removeItem(AI_KEY_STORAGE);
+  sessionStorage.removeItem(AI_KEY_STORAGE);
+  document.getElementById('aiKey').value = '';
+  var msg = document.getElementById('aiMsg');
+  msg.textContent = 'Key removed.';
+  msg.style.color = 'var(--text2)';
+  showToast('AI key removed');
+  loadAiSettings();
+}
+
+async function testAiConnection() {
+  var msg = document.getElementById('aiMsg');
+  var btn = document.getElementById('testAiBtn');
+  var key = document.getElementById('aiKey').value.trim() || getAiKey();
+  if (!key) { msg.textContent = 'Paste and save a key first.'; msg.style.color = 'var(--red)'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Testing…';
+  msg.textContent = '';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: AI_MODEL,
+        max_tokens: 20,
+        messages: [{ role: 'user', content: 'Reply with the word "ready".' }]
+      })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data && data.error && data.error.message ? data.error.message : ('HTTP ' + res.status));
+    msg.textContent = 'Connection OK ✓';
+    msg.style.color = 'var(--green)';
+    showToast('AI connection OK', 'success');
+  } catch (e) {
+    msg.textContent = 'Failed — ' + e.message;
+    msg.style.color = 'var(--red)';
+    showToast('AI test failed — ' + e.message, 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Test connection';
+}
+
+/* == GENERATE DESCRIPTION ========================================== */
+// Reads the current Add Property form, builds a prompt, calls Anthropic's
+// Messages API (with photos as vision inputs if configured), and writes the
+// result into the #propDesc textarea. Updates the live preview when done.
+async function generateDescription() {
+  var key = getAiKey();
+  if (!key) {
+    showToast('Add an Anthropic API key in AI Description settings first', 'error');
+    showSection('ai');
+    return;
+  }
+
+  var btn = document.getElementById('aiGenerateBtn');
+  var descEl = document.getElementById('propDesc');
+  if (!btn || !descEl) return;
+
+  // Gather facts from the form
+  var title    = (document.getElementById('propTitle')    || {}).value || '';
+  var price    = (document.getElementById('propPrice')    || {}).value || '';
+  var category = (document.getElementById('propCategory') || {}).value || '';
+  var typeSel  = (document.getElementById('propType')     || {}).value || 'to-let';
+  var address  = (document.getElementById('propAddress')  || {}).value || '';
+  var town     = (document.getElementById('propTown')     || {}).value || '';
+  var postcode = (document.getElementById('propPostcode') || {}).value || '';
+  var country  = (document.getElementById('propCountry')  || {}).value || '';
+  var beds     = (document.getElementById('propBeds')     || {}).value;
+  var baths    = (document.getElementById('propBaths')    || {}).value || '';
+  var reception= (document.getElementById('propReception')|| {}).value || '';
+  var sqft     = (document.getElementById('propSqft')     || {}).value || '';
+  var features = (document.getElementById('propFeatures') || {}).value || '';
+  var market   = (document.getElementById('propMarket')   || {}).value || 'uk';
+  var photoField = document.getElementById('propPhotos');
+  var photoUrls = photoField ? photoField.value.split('\n').map(function(s){return s.trim();}).filter(Boolean) : [];
+
+  // Need at least a few basic facts before generating something useful
+  if (!title && !address && !town) {
+    showToast('Add a title, address, or town first — AI needs something to work from', 'error');
+    return;
+  }
+
+  var style = localStorage.getItem(AI_STYLE_STORAGE) || '';
+  var includePhotos = (localStorage.getItem(AI_PHOTOS_STORAGE) || 'yes') === 'yes' && photoUrls.length > 0;
+
+  // Build a concise facts block so Claude doesn't have to parse JSON
+  var facts = [];
+  if (title)    facts.push('Title: ' + title);
+  if (price)    facts.push('Price: ' + price);
+  if (category) facts.push('Category: ' + category);
+  facts.push('Status: ' + (typeSel === 'let-agreed' ? 'Let Agreed' : 'To Let'));
+  if (market)   facts.push('Market: ' + (market === 'uk' ? 'United Kingdom' : 'Spain'));
+  var addrLine = [address, town, postcode, country].filter(Boolean).join(', ');
+  if (addrLine) facts.push('Location: ' + addrLine);
+  if (beds !== undefined && beds !== '') facts.push('Bedrooms: ' + (parseInt(beds,10) === 0 ? 'Studio' : beds));
+  if (baths)    facts.push('Bathrooms: ' + baths);
+  if (reception) facts.push('Reception rooms: ' + reception);
+  if (sqft)     facts.push('Floor area: ' + sqft);
+  if (features) facts.push('Features: ' + features);
+
+  var systemPrompt =
+    "You are a professional real estate copywriter for Patricia Real Estate, a boutique agency. " +
+    "Write polished, marketing-ready property descriptions for their listings page. " +
+    "Requirements: " +
+    "(1) 3-4 sentences, roughly 60-90 words total — this is the card description, not a full brochure. " +
+    "(2) Natural, warm, professional tone — never list-like, never formulaic. " +
+    "(3) Lead with the most compelling feature, not the address. " +
+    "(4) Mention concrete details from the facts provided (rooms, features, setting). " +
+    "(5) Only describe things in the photos if photos are provided — don't invent details. " +
+    "(6) Never use clichés like 'nestled', 'dream home', 'stunning opportunity'. " +
+    "(7) Don't repeat the price or the status ('To Let') — the card shows those separately. " +
+    "(8) Output PLAIN TEXT only — no markdown, no headers, no bullet points, no quotes around the description.";
+  if (style) systemPrompt += "\n\nHouse style from the agency owner: " + style;
+
+  var userText = "Write a description for this property.\n\nFacts:\n" + facts.join('\n');
+  if (includePhotos) userText += "\n\nI've attached " + photoUrls.length + " photo(s) of the property — use what you see to enrich the description.";
+
+  var userContent = [{ type: 'text', text: userText }];
+  if (includePhotos) {
+    // Attach up to 4 photos (keeps the request small & fast)
+    var toSend = photoUrls.slice(0, 4);
+    for (var i = 0; i < toSend.length; i++) {
+      userContent.push({ type: 'image', source: { type: 'url', url: toSend[i] } });
+    }
+  }
+
+  var originalLabel = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating…';
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: includePhotos ? AI_VISION_MODEL : AI_MODEL,
+        max_tokens: 400,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userContent }]
+      })
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      var errMsg = (data && data.error && data.error.message) ? data.error.message : ('HTTP ' + res.status);
+      throw new Error(errMsg);
+    }
+    var text = '';
+    if (data && Array.isArray(data.content)) {
+      for (var j = 0; j < data.content.length; j++) {
+        if (data.content[j].type === 'text') text += data.content[j].text;
+      }
+    }
+    text = (text || '').trim().replace(/^["']|["']$/g, '');
+    if (!text) throw new Error('The model returned an empty response.');
+
+    descEl.value = text;
+    descEl.dispatchEvent(new Event('input', { bubbles: true }));
+    updatePreviewCard();
+    showToast('Description generated ✓', 'success');
+  } catch (e) {
+    // Common failure mode: photo URLs aren't publicly reachable yet (GitHub
+    // Pages takes ~30s to publish). Give the user a clear hint.
+    var msg = e.message || String(e);
+    if (/image|url|fetch/i.test(msg) && includePhotos) {
+      msg += ' — photos may not be publicly reachable yet. Try again in ~30 seconds, or disable photo inclusion in AI settings.';
+    }
+    showToast('AI generation failed — ' + msg, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = originalLabel;
 }
 
 async function pushToGitHub(market) {
