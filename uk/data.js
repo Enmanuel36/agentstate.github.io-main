@@ -32,7 +32,7 @@ const propertyListings = [
     ],
     "description": "A stunning high-specification apartment on the 18th floor of the prestigious Meridian Tower. Floor-to-ceiling windows flood the space with natural light and offer breathtaking city views. Fitted kitchen with integrated appliances, luxury bathroom, and a private balcony.",
     "agent": "James Carter",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-17",
     "hidden": true
   },
@@ -64,7 +64,7 @@ const propertyListings = [
     ],
     "description": "An extended and superbly presented three-bedroom semi-detached home in a popular residential area. The ground floor features a large open-plan kitchen-diner extension, a separate sitting room, and a utility room.",
     "agent": "Patricia Reynolds",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-08",
     "emoji": "🏡",
     "hidden": true
@@ -96,7 +96,7 @@ const propertyListings = [
     ],
     "description": "A beautifully presented ground-floor garden flat forming part of a converted Edwardian house. The flat benefits from its own private garden to the rear — a rare find at this price.",
     "agent": "Patricia Reynolds",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-07",
     "emoji": "🌿",
     "hidden": true
@@ -131,7 +131,7 @@ const propertyListings = [
     ],
     "description": "A truly exceptional new-build executive home set within half an acre in the picturesque market town of Alresford. Five bedrooms, four bathrooms, and three reception rooms across three floors.",
     "agent": "Patricia Reynolds",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-06",
     "emoji": "🏰",
     "hidden": true
@@ -161,7 +161,7 @@ const propertyListings = [
     ],
     "description": "A well-proportioned one-bedroom apartment with wonderful harbour views from the sitting room. Fully furnished. This property has now been let agreed — contact us to join our waiting list.",
     "agent": "James Carter",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-05",
     "emoji": "⚓",
     "hidden": true
@@ -194,7 +194,7 @@ const propertyListings = [
     ],
     "description": "A spacious and versatile detached bungalow situated in a quiet cul-de-sac. Features three well-proportioned bedrooms, two bathrooms, and a magnificent 100-foot rear garden.",
     "agent": "Patricia Reynolds",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-04",
     "emoji": "🌻",
     "hidden": true

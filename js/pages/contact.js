@@ -14,7 +14,7 @@
  * ============================================================
  */
 
-const OWNER_EMAIL = 'hello@patriciarealestate.com';
+const OWNER_EMAIL = 'info@patriciaestateagent.com';
 let propertyPrefilled = false;
 let activeDataScript = null;
 

@@ -33,7 +33,7 @@ const propertyListings = [
     ],
     "description": "A magnificent five-bedroom villa perched above Marbella's golden mile. Floor-to-ceiling windows frame panoramic sea views. Infinity pool, landscaped gardens, and a double garage complete this exceptional home.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-10",
     "emoji": "🏖",
     "hidden": true
@@ -67,7 +67,7 @@ const propertyListings = [
     ],
     "description": "A stunning apartment in a beautifully restored Modernista building in the heart of the Eixample district. High ceilings, original mosaic tiles, and a modern kitchen.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-09",
     "emoji": "🏢",
     "hidden": true
@@ -101,7 +101,7 @@ const propertyListings = [
     ],
     "description": "An extraordinary beachfront penthouse with breathtaking Mediterranean views from a vast private terrace. Fully furnished to the highest specification with direct beach access.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-08",
     "emoji": "🌊",
     "hidden": true
@@ -135,7 +135,7 @@ const propertyListings = [
     ],
     "description": "A beautifully restored 18th-century Andalusian finca set within 5 hectares of olive groves with spectacular mountain views. Original stone features, heated pool, and separate guest cottage.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-07",
     "emoji": "🫒",
     "hidden": true
@@ -168,7 +168,7 @@ const propertyListings = [
     ],
     "description": "A sleek, fully renovated apartment right on the iconic Gran Vía. Open-plan living, two double bedrooms, and a private balcony. Walking distance to Retiro Park.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-06",
     "emoji": "🏙",
     "hidden": true
@@ -202,7 +202,7 @@ const propertyListings = [
     ],
     "description": "A rare seafront townhouse in the charming Costa Brava village of Begur. Four bedrooms, a sun terrace with direct sea views, and the option of a private mooring.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-05",
     "emoji": "⛵",
     "hidden": true
@@ -235,7 +235,7 @@ const propertyListings = [
     ],
     "description": "Brand new two-bedroom apartment within the prestigious La Cala Golf Resort. Contemporary finishes, private terrace overlooking the fairway, and access to resort amenities.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-04-04",
     "emoji": "⛳",
     "hidden": true
@@ -267,7 +267,7 @@ const propertyListings = [
     ],
     "description": "A characterful apartment in Seville's famous Santa Cruz quarter. Exposed brick walls, a traditional Andalusian patio. This property is now sold — contact us for similar opportunities.",
     "agent": "Patricia Morales",
-    "email": "hello@patriciarealestate.com",
+    "email": "info@patriciaestateagent.com",
     "added": "2026-03-20",
     "emoji": "🌹",
     "hidden": true

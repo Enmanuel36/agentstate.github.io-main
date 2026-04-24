@@ -17,7 +17,7 @@ var _ukData = [
     ],
     features: ["South-facing garden","Double garage","En-suite master","Open-plan kitchen","New build 2021"],
     description: "A magnificent detached family home set in a sought-after residential area of Guildford. Boasting four generous bedrooms, an open-plan kitchen-dining-living space, and a beautifully landscaped south-facing garden. The master bedroom benefits from a luxurious en-suite. Double garage and driveway parking for four vehicles.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-10", emoji: "🏡"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-10", emoji: "🏡"
   },
   {
     id: 2, title: "Charming 2-Bed Period Cottage", type: "to-let", category: "house",
@@ -31,7 +31,7 @@ var _ukData = [
     ],
     features: ["Original beams","Inglenook fireplace","Private courtyard","Period features","Quiet lane"],
     description: "A wonderfully characterful Grade II listed cottage dating back to the 18th century. Beautifully maintained with exposed beams, an inglenook fireplace, and a private walled courtyard garden. Situated in a quiet lane just a short walk from Winchester Cathedral.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-09", emoji: "🏠"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-09", emoji: "🏠"
   },
   {
     id: 3, title: "Luxury 1-Bed City Centre Apartment", type: "to-let", category: "flat",
@@ -45,7 +45,7 @@ var _ukData = [
     ],
     features: ["City views","Concierge","Gym access","Underground parking","Balcony","EPC: B"],
     description: "A stunning high-specification apartment on the 18th floor of the prestigious Meridian Tower. Floor-to-ceiling windows flood the space with natural light and offer breathtaking city views. Fitted kitchen with integrated appliances, luxury bathroom, and a private balcony.",
-    agent: "James Carter", email: "hello@patriciarealestate.com", added: "2026-04-09", emoji: "🏢"
+    agent: "James Carter", email: "info@patriciaestateagent.com", added: "2026-04-09", emoji: "🏢"
   },
   {
     id: 4, title: "Spacious 3-Bed Semi-Detached", type: "to-let", category: "house",
@@ -59,7 +59,7 @@ var _ukData = [
     ],
     features: ["Extended kitchen","Landscaped garden","Two bathrooms","Off-street parking","Good school catchment"],
     description: "An extended and superbly presented three-bedroom semi-detached home in a popular residential area. The ground floor features a large open-plan kitchen-diner extension, a separate sitting room, and a utility room.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-08", emoji: "🏡"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-08", emoji: "🏡"
   },
   {
     id: 5, title: "Modern 2-Bed Garden Flat", type: "to-let", category: "flat",
@@ -72,7 +72,7 @@ var _ukData = [
     ],
     features: ["Private garden","Off-street parking","Modern kitchen","Near station","Pets considered"],
     description: "A beautifully presented ground-floor garden flat forming part of a converted Edwardian house. The flat benefits from its own private garden to the rear — a rare find at this price.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-07", emoji: "🌿"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-07", emoji: "🌿"
   },
   {
     id: 6, title: "Executive 5-Bed New Build Detached", type: "to-let", category: "house",
@@ -87,7 +87,7 @@ var _ukData = [
     ],
     features: ["Triple garage","Smart home system","Underfloor heating","Wine cellar","Half-acre plot","EPC: A"],
     description: "A truly exceptional new-build executive home set within half an acre in the picturesque market town of Alresford. Five bedrooms, four bathrooms, and three reception rooms across three floors.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-06", emoji: "🏰"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-06", emoji: "🏰"
   },
   {
     id: 7, title: "Cosy 1-Bed Apartment — Let Agreed", type: "let-agreed", category: "flat",
@@ -99,7 +99,7 @@ var _ukData = [
     ],
     features: ["Harbour views","Allocated parking","On-site laundry","Near shops"],
     description: "A well-proportioned one-bedroom apartment with wonderful harbour views from the sitting room. Fully furnished. This property has now been let agreed — contact us to join our waiting list.",
-    agent: "James Carter", email: "hello@patriciarealestate.com", added: "2026-04-05", emoji: "⚓"
+    agent: "James Carter", email: "info@patriciaestateagent.com", added: "2026-04-05", emoji: "⚓"
   },
   {
     id: 8, title: "Detached 3-Bed Bungalow with Large Garden", type: "to-let", category: "bungalow",
@@ -113,7 +113,7 @@ var _ukData = [
     ],
     features: ["100ft rear garden","Driveway for 4 cars","Loft conversion potential","Quiet cul-de-sac","Solar panels"],
     description: "A spacious and versatile detached bungalow situated in a quiet cul-de-sac. Features three well-proportioned bedrooms, two bathrooms, and a magnificent 100-foot rear garden.",
-    agent: "Patricia Reynolds", email: "hello@patriciarealestate.com", added: "2026-04-04", emoji: "🌻"
+    agent: "Patricia Reynolds", email: "info@patriciaestateagent.com", added: "2026-04-04", emoji: "🌻"
   }
 ];
 
@@ -131,7 +131,7 @@ var _esData = [
     ],
     features: ["Private pool","Sea views","Gated community","Roof terrace","Double garage","EPC: A"],
     description: "A magnificent five-bedroom villa perched above Marbella's golden mile. Floor-to-ceiling windows frame panoramic sea views. Infinity pool, landscaped gardens, and a double garage complete this exceptional home.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-10", emoji: "🏖"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-10", emoji: "🏖"
   },
   {
     id: 2, title: "Stylish Barcelona City Apartment", type: "to-let", category: "flat",
@@ -145,7 +145,7 @@ var _esData = [
     ],
     features: ["Modernista building","Rooftop pool","Concierge","Central location","Restored features","EPC: C"],
     description: "A stunning apartment in a beautifully restored Modernista building in the heart of the Eixample district. High ceilings, original mosaic tiles, and a modern kitchen.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-09", emoji: "🏢"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-09", emoji: "🏢"
   },
   {
     id: 3, title: "Beachfront Penthouse", type: "to-let", category: "flat",
@@ -159,7 +159,7 @@ var _esData = [
     ],
     features: ["Beachfront","Private terrace","Jacuzzi","Gym access","Parking x2","Concierge"],
     description: "An extraordinary beachfront penthouse with breathtaking Mediterranean views from a vast private terrace. Fully furnished to the highest specification with direct beach access.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-08", emoji: "🌊"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-08", emoji: "🌊"
   },
   {
     id: 4, title: "Traditional Finca with Olive Groves", type: "to-let", category: "house",
@@ -173,7 +173,7 @@ var _esData = [
     ],
     features: ["5-hectare plot","Olive groves","Heated pool","Mountain views","Stables","Restored"],
     description: "A beautifully restored 18th-century Andalusian finca set within 5 hectares of olive groves with spectacular mountain views. Original stone features, heated pool, and separate guest cottage.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-07", emoji: "🫒"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-07", emoji: "🫒"
   },
   {
     id: 5, title: "Modern Madrid Centro Flat", type: "to-let", category: "flat",
@@ -186,7 +186,7 @@ var _esData = [
     ],
     features: ["Gran Vía location","Recently renovated","Air conditioning","Lift","Near metro","Furnished"],
     description: "A sleek, fully renovated apartment right on the iconic Gran Vía. Open-plan living, two double bedrooms, and a private balcony. Walking distance to Retiro Park.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-06", emoji: "🏙"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-06", emoji: "🏙"
   },
   {
     id: 6, title: "Costa Brava Seafront Townhouse", type: "to-let", category: "house",
@@ -200,7 +200,7 @@ var _esData = [
     ],
     features: ["Seafront location","Private mooring","Sun terrace","Recently renovated","Character features","EPC: B"],
     description: "A rare seafront townhouse in the charming Costa Brava village of Begur. Four bedrooms, a sun terrace with direct sea views, and the option of a private mooring.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-05", emoji: "⛵"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-05", emoji: "⛵"
   },
   {
     id: 7, title: "New Build Golf Resort Apartment", type: "to-let", category: "flat",
@@ -213,7 +213,7 @@ var _esData = [
     ],
     features: ["Golf resort","Community pool","Gym & spa","Underground parking","Holiday let potential","EPC: A"],
     description: "Brand new two-bedroom apartment within the prestigious La Cala Golf Resort. Contemporary finishes, private terrace overlooking the fairway, and access to resort amenities.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-04-04", emoji: "⛳"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-04-04", emoji: "⛳"
   },
   {
     id: 8, title: "Seville Historic Quarter Apartment", type: "let-agreed", category: "flat",
@@ -225,7 +225,7 @@ var _esData = [
     ],
     features: ["Santa Cruz barrio","Exposed brick","Private patio","Period features","Tourist licence","Recently sold"],
     description: "A characterful apartment in Seville's famous Santa Cruz quarter. Exposed brick walls, a traditional Andalusian patio. This property is now sold — contact us for similar opportunities.",
-    agent: "Patricia Morales", email: "hello@patriciarealestate.com", added: "2026-03-20", emoji: "🌹"
+    agent: "Patricia Morales", email: "info@patriciaestateagent.com", added: "2026-03-20", emoji: "🌹"
   }
 ];
 
@@ -843,7 +843,7 @@ function editListing(market, idx) {
   if (window.populatePhotoThumbs) populatePhotoThumbs(p.photos || []);
   document.getElementById('propDesc').value = p.description || '';
   document.getElementById('propAgent').value = p.agent || 'Patricia Reynolds';
-  document.getElementById('propEmail').value = p.email || 'hello@patriciarealestate.com';
+  document.getElementById('propEmail').value = p.email || 'info@patriciaestateagent.com';
   // Store editing index
   document.getElementById('savePropertyBtn').dataset.editMarket = market;
   document.getElementById('savePropertyBtn').dataset.editIdx = idx;
@@ -962,7 +962,7 @@ function clearForm() {
     if (el) el.value = '';
   });
   document.getElementById('propAgent').value = 'Patricia Reynolds';
-  document.getElementById('propEmail').value = 'hello@patriciarealestate.com';
+  document.getElementById('propEmail').value = 'info@patriciaestateagent.com';
   document.getElementById('saveMsg').textContent = '';
   const btn = document.getElementById('savePropertyBtn');
   delete btn.dataset.editIdx;
