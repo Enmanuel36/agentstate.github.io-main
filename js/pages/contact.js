@@ -21,7 +21,6 @@ const EMAILJS_TEMPLATE_ID = 'template_kzef07t';
 /* ── Init ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
   initContactContext();
-  prefillFromUrl();
   bindContactForm();
 });
 
@@ -50,6 +49,8 @@ function initContactContext() {
     breadcrumbHome.href = context.breadcrumbHref;
     breadcrumbHome.textContent = context.breadcrumbLabel;
   }
+
+  loadContactData(context.dataSrc);
 }
 
 function getContactContext(pageMarket, from) {
@@ -91,13 +92,76 @@ function getContactContext(pageMarket, from) {
   };
 }
 
+/* ── Property Dropdown ─────────────────────────────────── */
+let propertyPrefilled = false;
+let activeDataScript = null;
+
+function loadContactData(src) {
+  if (!src) {
+    syncPropertyDropdown();
+    return;
+  }
+  if (activeDataScript) {
+    activeDataScript.remove();
+    activeDataScript = null;
+  }
+  var script = document.createElement('script');
+  script.src = src;
+  script.dataset.contactData = 'true';
+  script.addEventListener('load', syncPropertyDropdown);
+  script.addEventListener('error', syncPropertyDropdown);
+  document.body.appendChild(script);
+  activeDataScript = script;
+}
+
+function getAvailableListings() {
+  if (typeof propertyListings !== 'undefined') return propertyListings;
+  if (typeof ecuadorProjects !== 'undefined') return ecuadorProjects;
+  return [];
+}
+
+function syncPropertyDropdown() {
+  const select = document.getElementById('property');
+  if (!select) return;
+
+  var listings = getAvailableListings();
+  var defaultOption = select.querySelector('option');
+
+  select.innerHTML = '';
+  if (defaultOption) {
+    select.appendChild(defaultOption);
+  } else {
+    select.appendChild(new Option('Select a property…', ''));
+  }
+
+  listings.forEach(function(p) {
+    var option = document.createElement('option');
+    var name = p.title || p.name || '';
+    var location = p.town || p.location || '';
+    option.value = name;
+    option.textContent = name + (location ? ' (' + location + ')' : '');
+    select.appendChild(option);
+  });
+
+  if (!propertyPrefilled) {
+    propertyPrefilled = prefillFromUrl();
+  }
+}
+
 /* ── URL Pre-fill ──────────────────────────────────────── */
 function prefillFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const propertyName = params.get('property');
-  if (!propertyName) return;
-  const input = document.getElementById('property');
-  if (input) input.value = propertyName;
+  if (!propertyName) return true;
+  const select = document.getElementById('property');
+  if (!select) return false;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === propertyName) {
+      select.selectedIndex = i;
+      return true;
+    }
+  }
+  return false;
 }
 
 /* ── Contact Form (EmailJS) ────────────────────────────── */
