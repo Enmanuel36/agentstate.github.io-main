@@ -3,25 +3,25 @@
  *  Patricia Real Estate – Contact Page JavaScript
  *
  *  HOW THIS WORKS:
- *  When the user clicks "Send Message", this script validates
- *  the form, builds a formatted email body, and opens the
- *  user's default email client (Gmail, Outlook, Apple Mail)
- *  with everything pre-filled. The user just clicks Send.
+ *  When the user submits the form, this script validates the
+ *  fields and sends the enquiry via EmailJS (no server needed).
+ *  The EmailJS SDK and emailjs.init() are loaded in <head>.
  *
- *  ZERO cost. ZERO third-party services. Works on GitHub Pages.
- *
- *  CONFIGURATION — owner email used by the contact flow:
+ *  CONFIGURATION:
+ *  – Set YOUR_SERVICE_ID and YOUR_TEMPLATE_ID below to match
+ *    your EmailJS account once you have set it up.
+ *  – Replace YOUR_PUBLIC_KEY in the <head> init call too.
  * ============================================================
  */
 
 const OWNER_EMAIL = 'info@patriciaestateagent.com';
-let propertyPrefilled = false;
-let activeDataScript = null;
+const EMAILJS_SERVICE_ID  = 'service_5i8eaae';
+const EMAILJS_TEMPLATE_ID = 'template_kzef07t';
 
 /* ── Init ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
   initContactContext();
-  bindPropertyDropdown();
+  prefillFromUrl();
   bindContactForm();
 });
 
@@ -50,8 +50,6 @@ function initContactContext() {
     breadcrumbHome.href = context.breadcrumbHref;
     breadcrumbHome.textContent = context.breadcrumbLabel;
   }
-
-  loadContactData(context.dataSrc);
 }
 
 function getContactContext(pageMarket, from) {
@@ -93,164 +91,69 @@ function getContactContext(pageMarket, from) {
   };
 }
 
-function loadContactData(src) {
-  if (!src) {
-    syncPropertyDropdown();
-    return;
-  }
-
-  if (activeDataScript) {
-    activeDataScript.remove();
-    activeDataScript = null;
-  }
-
-  var script = document.createElement('script');
-  script.src = src;
-  script.dataset.contactData = 'true';
-  script.addEventListener('load', syncPropertyDropdown);
-  script.addEventListener('error', syncPropertyDropdown);
-  document.body.appendChild(script);
-  activeDataScript = script;
-}
-
-/* ── Property Dropdown ─────────────────────────────────── */
-function bindPropertyDropdown() {
-  syncPropertyDropdown();
-}
-
-function getAvailableListings() {
-  if (typeof propertyListings !== 'undefined') return propertyListings;
-  if (typeof ecuadorProjects !== 'undefined') return ecuadorProjects;
-  return [];
-}
-
-function syncPropertyDropdown() {
-  const select = document.getElementById('contactProperty');
-  if (!select) return;
-
-  var listings = getAvailableListings();
-  var defaultOption = select.querySelector('option');
-
-  select.innerHTML = '';
-  if (defaultOption) {
-    select.appendChild(defaultOption);
-  } else {
-    select.appendChild(new Option('Select a property…', ''));
-  }
-
-  listings.forEach(function(p) {
-    var option = document.createElement('option');
-    var name = p.title || p.name || '';
-    var location = p.town || p.location || '';
-    option.value = name;
-    option.textContent = name + (location ? ' (' + location + ')' : '');
-    select.appendChild(option);
-  });
-
-  if (!propertyPrefilled) {
-    propertyPrefilled = prefillFromUrl();
-  }
-}
-
 /* ── URL Pre-fill ──────────────────────────────────────── */
 function prefillFromUrl() {
-  const params    = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
   const propertyName = params.get('property');
-  if (!propertyName) return true;
-  const select = document.getElementById('contactProperty');
-  if (!select) return false;
-  for (let i = 0; i < select.options.length; i++) {
-    if (select.options[i].value === propertyName) {
-      select.selectedIndex = i;
-      return true;
-    }
-  }
-  return false;
+  if (!propertyName) return;
+  const input = document.getElementById('property');
+  if (input) input.value = propertyName;
 }
 
-/* ── Contact Form ──────────────────────────────────────── */
+/* ── Contact Form (EmailJS) ────────────────────────────── */
 function bindContactForm() {
-  const submitBtn = document.getElementById('submitBtn');
-  if (!submitBtn) return;
+  const form = document.getElementById('enquiry-form');
+  if (!form) return;
 
-  submitBtn.addEventListener('click', () => {
-    const name    = document.getElementById('contactName').value.trim();
-    const email   = document.getElementById('contactEmail').value.trim();
-    const subject = document.getElementById('contactSubject').value;
-    const message = document.getElementById('contactMessage').value.trim();
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
 
+    // Client-side validation
     clearErrors();
     let valid = true;
 
-    if (!name) { markError('contactName', 'Please enter your name.'); valid = false; }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      markError('contactEmail', 'Please enter a valid email address.'); valid = false;
+    const fromName  = document.getElementById('from_name').value.trim();
+    const fromEmail = document.getElementById('from_email').value.trim();
+    const subject   = document.getElementById('subject').value;
+    const message   = document.getElementById('message').value.trim();
+
+    if (!fromName) { markError('from_name', 'Please enter your name.'); valid = false; }
+    if (!fromEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fromEmail)) {
+      markError('from_email', 'Please enter a valid email address.'); valid = false;
     }
-    if (!subject) { markError('contactSubject', 'Please select a subject.'); valid = false; }
-    if (!message) { markError('contactMessage', 'Please enter a message.'); valid = false; }
+    if (!subject) { markError('subject', 'Please select a subject.'); valid = false; }
+    if (!message)  { markError('message', 'Please enter a message.'); valid = false; }
     if (!valid) return;
 
-    const phone      = document.getElementById('contactPhone').value.trim();
-    const propertyTitle = document.getElementById('contactProperty').value;
+    var btn    = document.getElementById('submit-btn');
+    var status = document.getElementById('form-status');
 
-    const emailSubject = 'Patricia Real Estate Enquiry: ' + subject;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    status.style.display = 'none';
 
-    const bodyLines = [
-      '=== Patricia Real Estate Enquiry ===',
-      '',
-      'Name:    ' + name,
-      'Email:   ' + email,
-      phone      ? 'Phone:   ' + phone      : null,
-      propertyTitle ? 'Property:' + ' ' + propertyTitle : null,
-      'Subject: ' + subject,
-      '',
-      '--- Message ---',
-      message,
-      '',
-      '--- Sent via Patricia Real Estate contact form ---'
-    ].filter(function(l) { return l !== null; }).join('\n');
-
-    const mailtoUrl =
-      'mailto:' + OWNER_EMAIL +
-      '?subject=' + encodeURIComponent(emailSubject) +
-      '&body='    + encodeURIComponent(bodyLines);
-
-    window.location.href = mailtoUrl;
-
-    setTimeout(function() { showSuccessBanner(); }, 800);
+    emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
+      .then(function() {
+        btn.textContent = 'Message Sent ✓';
+        status.style.display = 'block';
+        status.style.color = 'green';
+        status.textContent = 'Thank you — we\'ll be in touch within 24 hours.';
+        form.reset();
+      }, function(error) {
+        btn.disabled = false;
+        btn.textContent = 'Send Message →';
+        status.style.display = 'block';
+        status.style.color = 'red';
+        status.textContent = 'Sorry, something went wrong. Please email us directly at ' + OWNER_EMAIL;
+        console.error('EmailJS error:', error);
+      });
   });
 
-  ['contactName','contactEmail','contactSubject','contactMessage'].forEach(function(id) {
-    const el = document.getElementById(id);
+  // Clear inline errors as the user types
+  ['from_name', 'from_email', 'subject', 'message'].forEach(function(id) {
+    var el = document.getElementById(id);
     if (el) el.addEventListener('input', function() { removeError(id); });
   });
-}
-
-/* ── Success Banner ────────────────────────────────────── */
-function showSuccessBanner() {
-  if (document.getElementById('successBanner')) return;
-  const banner = document.createElement('div');
-  banner.id = 'successBanner';
-  banner.innerHTML =
-    '<div class="success-banner">' +
-      '<span class="success-banner-icon">&#x2705;</span>' +
-      '<div>' +
-        '<strong>Your email app should have opened!</strong>' +
-        '<p>Review the pre-filled message and click Send in your email app. ' +
-        'If it did not open, email us directly at ' +
-        '<a href="mailto:' + OWNER_EMAIL + '">' + OWNER_EMAIL + '</a>.</p>' +
-      '</div>' +
-      '<button class="success-banner-close" type="button">&#x2715;</button>' +
-    '</div>';
-  const form = document.getElementById('contactForm');
-  if (form) form.before(banner);
-  const closeButton = banner.querySelector('.success-banner-close');
-  if (closeButton) {
-    closeButton.addEventListener('click', function() {
-      banner.remove();
-    });
-  }
-  banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ── Error Helpers ─────────────────────────────────────── */
