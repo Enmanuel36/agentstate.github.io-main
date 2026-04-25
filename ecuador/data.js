@@ -18,7 +18,7 @@ const ecuadorProjects = [
     "desc": "Estate plots with lush vegetation, paved access and 24h security. Ideal for residence or holiday investment.",
     "price": "From $12,000",
     "emoji": "🌿",
-    "hidden": true
+    "hidden": false
   },
   {
     "id": 2,

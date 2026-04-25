@@ -36,7 +36,7 @@ const propertyListings = [
     "email": "info@patriciaestateagent.com",
     "added": "2026-04-10",
     "emoji": "🏖",
-    "hidden": true
+    "hidden": false
   },
   {
     "id": 2,
