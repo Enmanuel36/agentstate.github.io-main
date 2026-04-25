@@ -134,7 +134,7 @@ function syncPropertyDropdown() {
     select.appendChild(new Option('Select a property…', ''));
   }
 
-  listings.forEach(function(p) {
+  listings.filter(function(p) { return !p.hidden; }).forEach(function(p) {
     var option = document.createElement('option');
     var name = p.title || p.name || '';
     var location = p.town || p.location || '';
