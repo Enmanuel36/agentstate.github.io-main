@@ -164,10 +164,18 @@ function prefillFromUrl() {
   return false;
 }
 
+/* ── Anti-spam constants ───────────────────────────────── */
+const SPAM_MIN_SECONDS  = 4;       // must take at least this long to fill the form
+const SPAM_COOLDOWN_MS  = 30 * 60 * 1000; // 30 min between submissions
+const SPAM_STORAGE_KEY  = 'pre_last_submit';
+
 /* ── Contact Form (EmailJS) ────────────────────────────── */
 function bindContactForm() {
   const form = document.getElementById('enquiry-form');
   if (!form) return;
+
+  // Record when the form became interactive
+  const formLoadTime = Date.now();
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -192,12 +200,44 @@ function bindContactForm() {
     var btn    = document.getElementById('submit-btn');
     var status = document.getElementById('form-status');
 
+    // ── Anti-spam layer 1: honeypot ──────────────────────
+    var honeypot = document.getElementById('hp_website');
+    if (honeypot && honeypot.value.trim() !== '') {
+      // Silently pretend it worked — don't tip off the bot
+      btn.textContent = 'Message Sent ✓';
+      status.style.display = 'block';
+      status.style.color = 'green';
+      status.textContent = 'Thank you — we\'ll be in touch within 24 hours.';
+      form.reset();
+      return;
+    }
+
+    // ── Anti-spam layer 2: timing check ─────────────────
+    var elapsed = (Date.now() - formLoadTime) / 1000;
+    if (elapsed < SPAM_MIN_SECONDS) {
+      status.style.display = 'block';
+      status.style.color = 'red';
+      status.textContent = 'Please take a moment to review your message before sending.';
+      return;
+    }
+
+    // ── Anti-spam layer 3: submission cooldown ───────────
+    var lastSubmit = sessionStorage.getItem(SPAM_STORAGE_KEY);
+    if (lastSubmit && (Date.now() - parseInt(lastSubmit, 10)) < SPAM_COOLDOWN_MS) {
+      var minutesLeft = Math.ceil((SPAM_COOLDOWN_MS - (Date.now() - parseInt(lastSubmit, 10))) / 60000);
+      status.style.display = 'block';
+      status.style.color = 'red';
+      status.textContent = 'You\'ve already sent an enquiry. Please wait ' + minutesLeft + ' minute(s) before submitting again.';
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Sending…';
     status.style.display = 'none';
 
     emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
       .then(function() {
+        sessionStorage.setItem(SPAM_STORAGE_KEY, Date.now().toString());
         btn.textContent = 'Message Sent ✓';
         status.style.display = 'block';
         status.style.color = 'green';

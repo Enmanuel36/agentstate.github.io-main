@@ -66,6 +66,9 @@
     }
     #submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
+    /* ── Honeypot (keep bots away, invisible to humans) ── */
+    .hp-field { position: absolute; left: -9999px; top: -9999px; }
+
     /* ── Form elements ── */
     .form-row { margin-bottom: 1.2rem; }
     .form-row.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -212,6 +215,12 @@
         <p>Fill in the form below and we'll reply within 24 hours.</p>
 
         <form id="enquiry-form" novalidate>
+          <!-- Honeypot: hidden from humans, bots fill it in -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="hp_website">Website</label>
+            <input type="text" id="hp_website" name="hp_website" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="form-group">
             <label for="from_name">Your Name *</label>
             <input type="text" id="from_name" name="from_name" required placeholder="Jane Smith">
